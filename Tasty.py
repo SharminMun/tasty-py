@@ -4,6 +4,10 @@ import sys
 import json
 import os
 
+# make sure to do an __init__ method
+
+  
+
 class Tasty:
     """
     Tasty class.
@@ -15,11 +19,57 @@ class Tasty:
     :param version: the Tasty version
     :param save_file: the Tasty save file
     """
-
     # make sure to do an __init__ method
-
+    
     def __init__(self):
-        pass
+        self.tasks = {}
+    
+   
+    def add_task(self, task_name):
+        if task_name not in self.tasks:
+            self.tasks[task_name] = "not yet"  
+        else:
+            print("Task already added.")    
+
+    def prompt_user(self, prompt):
+        line = input(prompt)
+        #print(line) 
+        while not line:
+            line = input(prompt) 
+        words = line.split()
+        #print(words)
+        command = words[0] 
+        #print(command) 
+        rest = words[1:] 
+        rest = " ".join(rest)
+        #print(rest)
+        return command, rest      
+
+    def display_tasks(self):
+        if self.tasks:
+            for task_name, status in self.tasks.items():
+                print("- ", task_name, status)        
+        else:
+            print("You have no task.")
+
+    def remove_task(self, task_name):
+        if task_name in self.tasks:
+            del self.tasks[task_name]
+        else:
+            print("Task not found.")   
+
+    #def tasks(self, task_name = None):
+       #task_name = input("Please enter the task you want to perform:")
+       #self.task_name.append(task_name)
+       #print(f"Task '{task_name}' preparing.")
+
+    
+    #def new_task(self):
+       # if not self.tasks:
+       #      print("No tasks found.")
+        #else:
+         #   input("please enter the new task that you want to perform:") 
+        
 
     def help(self):
         """
@@ -42,6 +92,15 @@ class Tasty:
         print("load                     ->        load a save file")
         print("clear                    ->        clear the screen")
         
+
+
+    def exitScreen(self):
+        print("Bye! Exiting Tasty program.")
+        exit() 
+
+    def clearScreen(self):
+        os.system('cls' if os.name == 'nt' else 'clear')  
+
     def license(self):
         """
         Display the MIT License terms for Tasty.
@@ -73,13 +132,24 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 if __name__ == "__main__":
     tasty = Tasty()
     tasty.help()
+
     while True:
-        command = input("Tasty> ")
+        command, task_name = tasty.prompt_user("Tasty> ")
         if command == "exit":
-            pass # exit the program, how would you do this?
+            tasty.exitScreen() # exit the program, how woud you do this?
         elif command == "help":
             tasty.help()
+        elif command == "new":
+            tasty.add_task(task_name)
+        elif command == "remove":
+            tasty.remove_task(task_name)
+        elif command == "tasks":
+            tasty.display_tasks()    
+        elif command == "load":
+            tasty.load()
         elif command == "license":
             tasty.license()
+        elif command == "clear screen":
+            tasty.clearScreen()
         else:
-            print("Unknown command")
+            print("Unknown command:", command, task_name)
