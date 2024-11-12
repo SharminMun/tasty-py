@@ -54,11 +54,8 @@ class Tasty:
             print("You have no task.")
 
     def remove_task(self, task_name):
-        if task_name in self.tasks:
-            del self.tasks[task_name]
-            self.trash[task_name] = "not yet"      
-        else:
-            print("Task not found.") 
+        self.trash[task_name] = self.tasks[task_name]     
+        del self.tasks[task_name]; 
 
     def trash_task(self):
         print(self.trash)
@@ -68,11 +65,8 @@ class Tasty:
             del self.trash[task_name]  
 
     def recover_task(self, task_name):
-        if task_name in self.trash:
-            del self.trash[task_name]
-            self.tasks[task_name] = "not yet"      
-        else:
-            print("Task found.") 
+        self.tasks[task_name] = self.trash[task_name]     
+        del self.trash[task_name]; 
            
     def save_task(self):
         data = {
