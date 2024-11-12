@@ -23,7 +23,8 @@ class Tasty:
     
     def __init__(self):
         self.tasks = {}
-    
+        self.trash = {}
+        self.save_file = "saved_tasks.json"
    
     def add_task(self, task_name):
         if task_name not in self.tasks:
@@ -55,21 +56,48 @@ class Tasty:
     def remove_task(self, task_name):
         if task_name in self.tasks:
             del self.tasks[task_name]
+            self.trash[task_name] = "not yet"      
         else:
-            print("Task not found.")   
+            print("Task not found.") 
 
-    #def tasks(self, task_name = None):
-       #task_name = input("Please enter the task you want to perform:")
-       #self.task_name.append(task_name)
-       #print(f"Task '{task_name}' preparing.")
+    def trash_task(self):
+        print(self.trash)
 
+    def destroy_trash(self, task_name):
+        if task_name in self.trash:
+            del self.trash[task_name]  
+
+    def recover_task(self, task_name):
+        if task_name in self.trash:
+            del self.trash[task_name]
+            self.tasks[task_name] = "not yet"      
+        else:
+            print("Task found.") 
+           
+    def save_task(self):
+        data = {
+            "tasks": self.tasks,
+        }
+        with open(self.save_file, "w") as f:
+            json.dump(data, f)
+        print("Your task is saved.")   
+
+    def complete_task(self, task_name):
+        if self.tasks[task_name] == "task not finished yet!":
+            self.tasks[task_name] = "task completed successfully!"  
+        else:
+            print("Task completed successfully!") 
+
+    def unfinished_task(self, task_name):
+        self.tasks[task_name] == "task is unfinished!"  
+
+    def load_task(self):
+        with open('saved_tasks.json', 'r') as fp:
+            self.tasks = json.load(fp)
     
-    #def new_task(self):
-       # if not self.tasks:
-       #      print("No tasks found.")
-        #else:
-         #   input("please enter the new task that you want to perform:") 
         
+                
+
 
     def help(self):
         """
@@ -95,7 +123,7 @@ class Tasty:
 
 
     def exitScreen(self):
-        print("Bye! Exiting Tasty program.")
+        print("Bye! Thanks for using Tasty program.")
         exit() 
 
     def clearScreen(self):
@@ -136,20 +164,45 @@ if __name__ == "__main__":
     while True:
         command, task_name = tasty.prompt_user("Tasty> ")
         if command == "exit":
-            tasty.exitScreen() # exit the program, how woud you do this?
+            tasty.exitScreen() 
+
         elif command == "help":
             tasty.help()
+
         elif command == "new":
-            tasty.add_task(task_name)
-        elif command == "remove":
-            tasty.remove_task(task_name)
+            tasty.add_task(task_name)  
+
         elif command == "tasks":
             tasty.display_tasks()    
-        elif command == "load":
-            tasty.load()
+
+        elif command == "save":
+            tasty.save_task()
+
+        elif command == "remove":
+            tasty.remove_task(task_name)
+
+        elif command == "trash":
+            tasty.trash_task()  
+
+        elif command == "destroy":
+            tasty.destroy_trash(task_name)
+
+        elif command == "recover":
+            tasty.recover_task(task_name)    
+
+        elif command == "done":
+            tasty.complete_task(task_name)   
+
+        elif command == "unfinish":
+            tasty.unfinished_task(task_name)            
+
         elif command == "license":
             tasty.license()
-        elif command == "clear screen":
+
+        elif command == "load":
+            tasty.load_task()   
+
+        elif command == "clear":
             tasty.clearScreen()
         else:
             print("Unknown command:", command, task_name)
